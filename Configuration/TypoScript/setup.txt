@@ -1,3 +1,27 @@
+// #########################################################
+// Extbase Configuration
+// #########################################################
+
+config.tx_extbase.persistence {
+
+    classes {
+
+        TYPO3\CMS\Extbase\Domain\Model\FrontendUser {
+            subclasses {
+                Tx_RkwMailer_FrontendUser = RKW\RkwMailer\Domain\Model\FrontendUser
+            }
+        }
+
+        RKW\RkwMailer\Domain\Model\FrontendUser {
+            mapping {
+                # tablename
+                tableName = fe_users
+            }
+        }
+    }
+}
+
+
 # Module configuration
 module.tx_rkwmailer {
     persistence {

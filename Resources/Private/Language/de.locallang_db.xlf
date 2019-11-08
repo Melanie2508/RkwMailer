@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2019-11-06T15:00:08Z" product-name="rkw_mailer">
+		<header/>
+		<body>
+
+            <!-- =================================================== -->
+            <!-- tx_rkwmailer_domain_model_frontenduser                 -->
+            <!-- =================================================== -->
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser">
+                <source>RKW Mailer</source>
+                <target>RKW Mailer</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_soft_bounce_count">
+                <source>Count: Soft Bounces</source>
+                <target>Anzahl: Soft Bounces</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_hard_bounce_count">
+                <source>Count: Hard Bounces</source>
+                <target>Anzahl: Hard Bounces</target>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_last_bounce">
+                <source>Last bounce</source>
+                <target>Letzter Bounce</target>
+            </trans-unit>
+
+
+		</body>
+	</file>
+</xliff>

@@ -10,5 +10,8 @@
         <last_name>Lauterbach</last_name>
         <tx_rkwregistration_gender>1</tx_rkwregistration_gender>
         <tx_rkwregistration_language_key>fr</tx_rkwregistration_language_key>
+        <tx_rkwmailer_soft_bounce_count>1</tx_rkwmailer_soft_bounce_count>
+        <tx_rkwmailer_hard_bounce_count>1</tx_rkwmailer_hard_bounce_count>
+        <tx_rkwmailer_last_bounce>1</tx_rkwmailer_last_bounce>
     </fe_users>
 </dataset>

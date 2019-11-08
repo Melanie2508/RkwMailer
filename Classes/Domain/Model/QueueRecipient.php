@@ -38,7 +38,7 @@ class QueueRecipient extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * frontendUser
      *
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+     * @var \RKW\RkwMailer\Domain\Model\FrontendUser
      */
     protected $frontendUser;
 
@@ -168,7 +168,7 @@ class QueueRecipient extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the frontendUser
      *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+     * @return \RKW\RkwMailer\Domain\Model\FrontendUser
      */
     public function getFrontendUser()
     {
@@ -178,7 +178,7 @@ class QueueRecipient extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the frontendUser
      *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FrontendUser $frontendUser
+     * @param \RKW\RkwMailer\Domain\Model\FrontendUser $frontendUser
      * @return void
      */
     public function setFrontendUser($frontendUser)

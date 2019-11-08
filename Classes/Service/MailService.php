@@ -897,7 +897,7 @@ class MailService
 
         // check if email of recipient has bounced recently - but only for pipeline mailings
         if (
-            ($this->bounceMailRepository->countByEmailAndType($queueRecipient->getEmail()) < 3)
+            ($queueRecipient->getFrontendUser()->getTxRkwmailerHardBounceCount() < 3)
             || (! $this->queueMail->getPipeline())
         ){
 

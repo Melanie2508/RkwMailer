@@ -266,6 +266,24 @@
             </trans-unit>
 
 
+
+            <!-- =================================================== -->
+            <!-- tx_rkwmailer_domain_model_frontenduser                 -->
+            <!-- =================================================== -->
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser">
+                <source>RKW Mailer</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_soft_bounce_count">
+                <source>Count: Soft Bounces</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_hard_bounce_count">
+                <source>Count: Hard Bounces</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_frontenduser.tx_rkwmailer_last_bounce">
+                <source>Last bounce</source>
+            </trans-unit>
+
+
             <!-- =================================================== -->
             <!-- Tabs                                                -->
             <!-- =================================================== -->

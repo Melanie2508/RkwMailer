@@ -160,3 +160,15 @@ CREATE TABLE tx_rkwmailer_domain_model_bouncemail (
     KEY email_status (email, status),
 
 );
+
+
+
+#
+# Table structure for table 'fe_users'
+#
+CREATE TABLE fe_users (
+
+    tx_rkwmailer_soft_bounce_count int(11) unsigned DEFAULT '0' NOT NULL,
+    tx_rkwmailer_hard_bounce_count int(11) unsigned DEFAULT '0' NOT NULL,
+    tx_rkwmailer_last_bounce int(11) DEFAULT '0' NOT NULL,
+);

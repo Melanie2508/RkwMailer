@@ -69,6 +69,14 @@ class MailerCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandC
      */
     protected $bounceMailRepository;
 
+    /**
+     * frontendUserRepository
+     *
+     * @var \RKW\RkwMailer\Domain\Repository\FrontendUserRepository
+     * @inject
+     */
+    protected $frontendUserRepository;
+
 
     /**
      * configurationManager
@@ -345,7 +353,7 @@ class MailerCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandC
     /**
      * Process bounced mails
      *
-     * @param int $maxEmails
+     * @param int $maxMails
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
@@ -369,6 +377,18 @@ class MailerCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandC
                     foreach ($bounceMails as $bounceMail) {
                         $bounceMail->setStatus(1);
                         $this->bounceMailRepository->update($bounceMail);
+
+                        // set additional data of bouncing to specific frontendUser
+                        /** @var \RKW\RkwMailer\Domain\Model\FrontendUser $frontendUser */
+                        if ($frontendUser = $queueRecipient->getFrontendUser() instanceof \RKW\RkwMailer\Domain\Model\FrontendUser) {
+                            if ($bounceMail->getType() == 'hard') {
+                                $frontendUser->setTxRkwmailerHardBounceCount($frontendUser->getTxRkwmailerHardBounceCount() + 1);
+                            } else if ($bounceMail->getType() == 'soft') {
+                                $frontendUser->setTxRkwmailerSoftBounceCount($frontendUser->getTxRkwmailerSoftBounceCount() + 1);
+                            }
+                            $frontendUser->setTxRkwmailerLastBounce(time());
+                            $this->frontendUserRepository->update($frontendUser);
+                        }
                     }
 
                     $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('Setting bounced status for queueRecipient id=%, email=%s.', $queueRecipient->getUid(), $queueRecipient->getEmail()));
