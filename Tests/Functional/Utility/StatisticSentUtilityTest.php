@@ -1,0 +1,359 @@
+<?php
+namespace RKW\RkwMailer\Tests\Functional\Utility;
+
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+
+use RKW\RkwMailer\Utility\StatisticSentUtility;
+use RKW\RkwMailer\Domain\Repository\QueueMailRepository;
+use RKW\RkwMailer\Domain\Repository\QueueRecipientRepository;
+use RKW\RkwMailer\Domain\Repository\LinkRepository;
+use RKW\RkwMailer\Domain\Repository\StatisticSentRepository;
+use RKW\RkwNewsletter\Domain\Repository\TopicRepository;
+use RKW\RkwNewsletter\Domain\Repository\FrontendUserRepository;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+
+/**
+ * StatisticSentUtilityTest
+ *
+ * @author Maximilian Fäßler <maximilian@faesslerweb.de>
+ * @copyright Rkw Kompetenzzentrum
+ * @package RKW_RkwMailer
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ */
+class StatisticSentUtilityTest extends FunctionalTestCase
+{
+
+    /**
+     * Signal name
+     *
+     * @const string
+     */
+    const NUMBER_OF_STATISTIC_OPENINGS = 3;
+
+    /**
+     * @var string[]
+     */
+    protected $testExtensionsToLoad = [
+        'typo3conf/ext/rkw_basics',
+        'typo3conf/ext/rkw_registration',
+        'typo3conf/ext/rkw_mailer',
+        'typo3conf/ext/rkw_newsletter',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $coreExtensionsToLoad = [];
+
+    /**
+     * @var \RKW\RkwMailer\Utility\StatisticSentUtility
+     */
+    private $subject = null;
+
+    /**
+     * @var \RKW\RkwMailer\Domain\Repository\QueueMailRepository
+     */
+    private $queueMailRepository;
+
+    /**
+     * @var \RKW\RkwMailer\Domain\Repository\QueueRecipientRepository
+     */
+    private $queueRecipientRepository;
+
+    /**
+     * @var \RKW\RkwMailer\Domain\Repository\LinkRepository
+     */
+    private $linkRepository;
+
+    /**
+     * @var \RKW\RkwMailer\Domain\Repository\StatisticSentRepository
+     */
+    private $statisticSentRepository;
+
+    /**
+     * @var \RKW\RkwNewsletter\Domain\Repository\TopicRepository
+     */
+    private $topicRepository;
+
+    /**
+     * @var \RKW\RkwNewsletter\Domain\Repository\FrontendUserRepository
+     */
+    private $frontendUserRepository;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+     */
+    private $persistenceManager = null;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+     */
+    private $objectManager = null;
+
+
+    /**
+     * Setup
+     * @throws \Exception
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/FeUsers.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/Pages.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/QueueMail.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/QueueRecipient.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/Link.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/StatisticSent.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/Database/TxRkwnewsletterTopic.xml');
+
+        $this->setUpFrontendRootPage(
+            1,
+            [
+                'EXT:rkw_newsletter/Configuration/TypoScript/setup.txt',
+                'EXT:rkw_registration/Configuration/TypoScript/setup.txt',
+                'EXT:rkw_mailer/Configuration/TypoScript/setup.txt',
+                'EXT:rkw_mailer/Tests/Functional/Utility/Fixtures/Frontend/Configuration/Rootpage.typoscript',
+            ]
+        );
+
+        $this->persistenceManager = GeneralUtility::makeInstance(PersistenceManager::class);
+
+        /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueMailRepository = $this->objectManager->get(QueueMailRepository::class);
+        $this->queueRecipientRepository = $this->objectManager->get(QueueRecipientRepository::class);
+        $this->linkRepository = $this->objectManager->get(LinkRepository::class);
+        $this->statisticSentRepository = $this->objectManager->get(StatisticSentRepository::class);
+        $this->topicRepository = $this->objectManager->get(TopicRepository::class);
+        $this->frontendUserRepository = $this->objectManager->get(FrontendUserRepository::class);
+
+        $this->subject = $this->objectManager->get(StatisticSentUtility::class);
+
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatistic_GivenQueueMailAndExistingActionAndExistingSubStatistic_ReturnsTrue()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        // get topic for creating sub statistic
+        /** @var \RKW\RkwNewsletter\Domain\Model\Topic $topic */
+        $topic = $this->topicRepository->findByIdentifier(1);
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatistic($queueMail, $action, $topic);
+
+        static::assertTrue($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatistic_GivenQueueMailAndExistingActionAndNotExistingSubStatistic_ReturnsTrue()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        // get topic for creating sub statistic
+        // this topic has no existing statistic in relation to the queue mail and will be created
+        /** @var \RKW\RkwNewsletter\Domain\Model\Topic $topic */
+        $topic = $this->topicRepository->findByIdentifier(3);
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatistic($queueMail, $action, $topic);
+
+        static::assertTrue($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatistic_GivenQueueMailAndExistingAction_ReturnsTrue()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatistic($queueMail, $action);
+
+        static::assertTrue($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatistic_GivenQueueMailAndIncorrectAction_ReturnsFalse()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+        $action = 'Das Leben ist schön.';
+
+        $result = $this->subject->elevateStatistic($queueMail, $action);
+
+        static::assertFalse($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatisticOfTxRkwNewsletterTopic_GivenQueueMailAndQueueRecipientAndAction_ReturnsTrue()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
+        $queueRecipient = $this->queueRecipientRepository->findByIdentifier(2);
+
+        // Workaround start
+        // Problem: can't build relation between queueRecipient, FrontendUser and Topic, because the feUser method is named txRkwnewsletterSubscription
+        /** @var \RKW\RkwNewsletter\Domain\Model\Topic $topic */
+        $topic = $this->topicRepository->findByIdentifier(1);
+        /** @var \RKW\RkwNewsletter\Domain\Model\FrontendUser $frontendUser */
+        $frontendUser = $this->frontendUserRepository->findByIdentifier(1);
+        $frontendUser->addTxRkwnewsletterSubscription($topic);
+        $queueRecipient->setFrontendUser($frontendUser);
+        // Workaround end
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatisticOfTxRkwNewsletterTopic($queueMail, $queueRecipient, $action);
+
+        static::assertTrue($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatisticOfTxRkwNewsletterTopic_GivenFaultyQueueMailAndQueueRecipientAndAction_ReturnsFalse()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        // FOR THIS TEST: REMOVE TYPE FOR NEWSLETTER
+        $queueMail->setType(0);
+
+        /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
+        $queueRecipient = $this->queueRecipientRepository->findByIdentifier(2);
+
+        // Workaround start
+        // Problem: can't build relation between queueRecipient, FrontendUser and Topic, because the feUser method is named txRkwnewsletterSubscription
+        /** @var \RKW\RkwNewsletter\Domain\Model\Topic $topic */
+        $topic = $this->topicRepository->findByIdentifier(1);
+        /** @var \RKW\RkwNewsletter\Domain\Model\FrontendUser $frontendUser */
+        $frontendUser = $this->frontendUserRepository->findByIdentifier(1);
+        $frontendUser->addTxRkwnewsletterSubscription($topic);
+        $queueRecipient->setFrontendUser($frontendUser);
+        // Workaround end
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatisticOfTxRkwNewsletterTopic($queueMail, $queueRecipient, $action);
+
+        static::assertFalse($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatisticOfTxRkwNewsletterTopic_GivenQueueMailAndQueueRecipientAndFaultyAction_ReturnsFalse()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
+        $queueRecipient = $this->queueRecipientRepository->findByIdentifier(2);
+
+        // Workaround start
+        // Problem: can't build relation between queueRecipient, FrontendUser and Topic, because the feUser method is named txRkwnewsletterSubscription
+        /** @var \RKW\RkwNewsletter\Domain\Model\Topic $topic */
+        $topic = $this->topicRepository->findByIdentifier(1);
+        /** @var \RKW\RkwNewsletter\Domain\Model\FrontendUser $frontendUser */
+        $frontendUser = $this->frontendUserRepository->findByIdentifier(1);
+        $frontendUser->addTxRkwnewsletterSubscription($topic);
+        $queueRecipient->setFrontendUser($frontendUser);
+        // Workaround end
+
+        // add faulty action
+        $action = 'Das Leben ist schön.';
+
+        $result = $this->subject->elevateStatisticOfTxRkwNewsletterTopic($queueMail, $queueRecipient, $action);
+
+        static::assertFalse($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function elevateStatisticOfTxRkwNewsletterTopic_GivenQueueMailAndFaultyQueueRecipientAndAction_ReturnsFalse()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
+        $queueRecipient = $this->queueRecipientRepository->findByIdentifier(2);
+
+        // FOR THIS TEST: FrontendUser has no topic! (do not add some topic here)
+        /** @var \RKW\RkwNewsletter\Domain\Model\FrontendUser $frontendUser */
+        $frontendUser = $this->frontendUserRepository->findByIdentifier(1);
+        $queueRecipient->setFrontendUser($frontendUser);
+
+        // get existing action by random
+        $randIndex = array_rand(StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS);
+        $action = StatisticSentUtility::AVAILABLE_STATISTIC_ACTIONS[$randIndex];
+
+        $result = $this->subject->elevateStatisticOfTxRkwNewsletterTopic($queueMail, $queueRecipient, $action);
+
+        static::assertFalse($result);
+    }
+
+
+    /**
+     * TearDown
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
+}

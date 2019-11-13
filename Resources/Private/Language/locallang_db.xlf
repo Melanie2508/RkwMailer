@@ -115,6 +115,30 @@
             <trans-unit id="tx_rkwmailer_domain_model_queuemail.tstamp_send_finish">
                 <source>Tstamp Send Finish</source>
             </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.total">
+                <source>Total</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.sent">
+                <source>Sent</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.successful">
+                <source>Successful</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.failed">
+                <source>Failed</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.deferred">
+                <source>Deferred</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.bounced">
+                <source>Bounced</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.opened">
+                <source>Opened</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_queuemail.clicked">
+                <source>Clicked</source>
+            </trans-unit>
 
 
             <!-- =================================================== -->
@@ -202,6 +226,51 @@
             </trans-unit>
             <trans-unit id="tx_rkwmailer_domain_model_statisticopening.click_count">
                 <source>Click Count</source>
+            </trans-unit>
+
+
+
+            <!-- =================================================== -->
+            <!-- tx_rkwmailer_domain_model_statisticsent             -->
+            <!-- =================================================== -->
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent">
+                <source>RKW Mailer: Statistic sent</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.queue_mail">
+                <source>Queue mail</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.foreign_uid">
+                <source>Foreign uid</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.foreign_table">
+                <source>Foreign table</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.foreign_field">
+                <source>Foreign field</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.total">
+                <source>Total</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.sent">
+                <source>Sent</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.successful">
+                <source>Successful</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.failed">
+                <source>Failed</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.deferred">
+                <source>Deferred</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.bounced">
+                <source>Bounced</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.opened">
+                <source>Opened</source>
+            </trans-unit>
+            <trans-unit id="tx_rkwmailer_domain_model_statisticsent.clicked">
+                <source>Clicked</source>
             </trans-unit>
 
 

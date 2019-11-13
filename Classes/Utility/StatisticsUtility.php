@@ -59,6 +59,14 @@ class StatisticsUtility
     protected $statisticOpeningRepository;
 
     /**
+     * statisticSentRepository
+     *
+     * @var \RKW\RkwMailer\Domain\Repository\StatisticSentRepository
+     * @inject
+     */
+    protected $statisticSentRepository;
+
+    /**
      * Persistence Manager
      *
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager

@@ -230,6 +230,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * total
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $total;
@@ -238,6 +239,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * sent
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $sent;
@@ -246,6 +248,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * successful
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $successful;
@@ -254,6 +257,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * failed
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $failed;
@@ -261,6 +265,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * deferred
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $deferred;
@@ -268,6 +273,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * bounced
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $bounced;
@@ -276,6 +282,7 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * opened
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $opened;
@@ -284,9 +291,19 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * clicked
      *
+     * @deprecated use StatisticSent instead
      * @var integer
      */
     protected $clicked;
+
+
+    /**
+     * @param array $settings
+     */
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
+    }
 
 
     /**
@@ -1099,6 +1116,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->total;
     }
 
+    /**
+     * @param int $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+    }
 
     /**
      * Returns the sent
@@ -1110,7 +1134,14 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->sent;
     }
 
-    
+    /**
+     * @param int $sent
+     */
+    public function setSent($sent)
+    {
+        $this->sent = $sent;
+    }
+
     /**
      * Returns the successful
      *
@@ -1121,6 +1152,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->successful;
     }
 
+    /**
+     * @param int $successful
+     */
+    public function setSuccessful($successful)
+    {
+        $this->successful = $successful;
+    }
 
     /**
      * Returns the failed
@@ -1132,6 +1170,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->failed;
     }
 
+    /**
+     * @param int $failed
+     */
+    public function setFailed($failed)
+    {
+        $this->failed = $failed;
+    }
 
     /**
      * Returns the deferred
@@ -1143,6 +1188,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->deferred;
     }
 
+    /**
+     * @param int $deferred
+     */
+    public function setDeferred($deferred)
+    {
+        $this->deferred = $deferred;
+    }
 
     /**
      * Returns the bounced
@@ -1154,6 +1206,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         return $this->bounced;
     }
 
+    /**
+     * @param int $bounced
+     */
+    public function setBounced($bounced)
+    {
+        $this->bounced = $bounced;
+    }
     
     /**
      * Returns the opened
@@ -1166,6 +1225,14 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
+     * @param int $opened
+     */
+    public function setOpened($opened)
+    {
+        $this->opened = $opened;
+    }
+
+    /**
      * Returns the clicked
      *
      * @return integer $clicked
@@ -1174,15 +1241,13 @@ class QueueMail extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->clicked;
     }
-
-
-
-
-
-
-
-
-
+    /**
+     * @param int $clicked
+     */
+    public function setClicked($clicked)
+    {
+        $this->clicked = $clicked;
+    }
 
     /**
      * Gets TypoScript framework settings

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+
+    <!-- check against basic data statistics -->
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>1</uid>
+        <pid>1</pid>
+        <queue_mail>1</queue_mail>
+        <foreign_uid>0</foreign_uid>
+        <foreign_table />
+        <foreign_field />
+        <total>2</total>
+        <sent>2</sent>
+        <successful>2</successful>
+        <failed>0</failed>
+        <deferred>0</deferred>
+        <bounced>0</bounced>
+        <opened>2</opened>
+        <clicked>2</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>2</uid>
+        <pid>1</pid>
+        <queue_mail>2</queue_mail>
+        <foreign_uid>0</foreign_uid>
+        <foreign_table />
+        <foreign_field />
+        <total>10</total>
+        <sent>9</sent>
+        <successful>7</successful>
+        <failed>2</failed>
+        <deferred>1</deferred>
+        <bounced>2</bounced>
+        <opened>5</opened>
+        <clicked>3</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+
+    <!-- check against relation statistics (in this case: topics from RkwNewsletter) -->
+
+    <!-- queueMail 1 -->
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>3</uid>
+        <pid>1</pid>
+        <queue_mail>1</queue_mail>
+        <foreign_uid>1</foreign_uid>
+        <foreign_table>tx_rkwnewsletter_domain_model_topic</foreign_table>
+        <foreign_field>uid</foreign_field>
+        <total>2</total>
+        <sent>2</sent>
+        <successful>2</successful>
+        <failed>0</failed>
+        <deferred>0</deferred>
+        <bounced>0</bounced>
+        <opened>2</opened>
+        <clicked>2</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>4</uid>
+        <pid>1</pid>
+        <queue_mail>1</queue_mail>
+        <foreign_uid>2</foreign_uid>
+        <foreign_table>tx_rkwnewsletter_domain_model_topic</foreign_table>
+        <foreign_field>uid</foreign_field>
+        <total>2</total>
+        <sent>2</sent>
+        <successful>2</successful>
+        <failed>0</failed>
+        <deferred>0</deferred>
+        <bounced>0</bounced>
+        <opened>2</opened>
+        <clicked>2</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>5</uid>
+        <pid>1</pid>
+        <queue_mail>1</queue_mail>
+        <foreign_uid>2</foreign_uid>
+        <foreign_table>tx_rkwbasics_domain_model_department</foreign_table>
+        <foreign_field>uid</foreign_field>
+        <total>2</total>
+        <sent>2</sent>
+        <successful>2</successful>
+        <failed>0</failed>
+        <deferred>0</deferred>
+        <bounced>0</bounced>
+        <opened>2</opened>
+        <clicked>2</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+
+    <!-- queueMail 2 -->
+    <tx_rkwmailer_domain_model_statisticsent>
+        <uid>6</uid>
+        <pid>1</pid>
+        <queue_mail>2</queue_mail>
+        <foreign_uid>1</foreign_uid>
+        <foreign_table>tx_rkwnewsletter_domain_model_topic</foreign_table>
+        <foreign_field>uid</foreign_field>
+        <total>2</total>
+        <sent>2</sent>
+        <successful>2</successful>
+        <failed>0</failed>
+        <deferred>0</deferred>
+        <bounced>0</bounced>
+        <opened>2</opened>
+        <clicked>2</clicked>
+    </tx_rkwmailer_domain_model_statisticsent>
+
+
+</dataset>

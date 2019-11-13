@@ -319,45 +319,76 @@ $GLOBALS['TCA']['tx_rkwmailer_domain_model_queuemail'] = array(
 			),
 		),
         'total' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.total',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'sent' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.sent',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'successful' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.successful',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'failed' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.failed',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'deferred' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.deferred',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'bounced' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.bounced',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'opened' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.opened',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
         'clicked' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:rkw_mailer/Resources/Private/Language/locallang_db.xlf:tx_rkwmailer_domain_model_queuemail.clicked',
             'config' => array(
-                'type' => 'passthrough',
-            ),
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            )
         ),
-
     ),
 );

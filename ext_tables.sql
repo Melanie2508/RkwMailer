@@ -40,6 +40,14 @@ CREATE TABLE tx_rkwmailer_domain_model_queuemail (
 	tstamp_real_sending int(11) unsigned DEFAULT '0' NOT NULL,
 	tstamp_send_finish int(11) unsigned DEFAULT '0' NOT NULL,
 
+    total int(11) DEFAULT '0' NOT NULL,
+	sent int(11) DEFAULT '0' NOT NULL,
+	successful int(11) DEFAULT '0' NOT NULL,
+	failed int(11) DEFAULT '0' NOT NULL,
+	deferred int(11) DEFAULT '0' NOT NULL,
+	bounced int(11) DEFAULT '0' NOT NULL,
+	opened int(11) DEFAULT '0' NOT NULL,
+	clicked int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid),
@@ -105,6 +113,39 @@ CREATE TABLE tx_rkwmailer_domain_model_statisticopening (
 	KEY pixel (pixel),
 
 );
+
+
+#
+# Table structure for table 'tx_rkwmailer_domain_model_statisticsent'
+#
+CREATE TABLE tx_rkwmailer_domain_model_statisticsent (
+
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+
+	queue_mail int(11) DEFAULT '0' NOT NULL,
+    foreign_uid int(11) DEFAULT '0' NOT NULL,
+    foreign_table varchar(255) DEFAULT '' NOT NULL,
+    foreign_field varchar(255) DEFAULT '' NOT NULL,
+
+    total int(11) DEFAULT '0' NOT NULL,
+	sent int(11) DEFAULT '0' NOT NULL,
+	successful int(11) DEFAULT '0' NOT NULL,
+	failed int(11) DEFAULT '0' NOT NULL,
+	deferred int(11) DEFAULT '0' NOT NULL,
+	bounced int(11) DEFAULT '0' NOT NULL,
+	opened int(11) DEFAULT '0' NOT NULL,
+	clicked int(11) DEFAULT '0' NOT NULL,
+
+	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+	crdate int(11) unsigned DEFAULT '0' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid),
+	KEY queue_mail (queue_mail),
+	KEY foreign_uid (foreign_uid),
+);
+
 
 #
 # Table structure for table 'tx_rkwmailer_domain_model_link'

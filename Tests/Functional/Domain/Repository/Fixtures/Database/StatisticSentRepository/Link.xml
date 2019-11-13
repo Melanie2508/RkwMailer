@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>1</uid>
+        <pid>1</pid>
+        <queue_mail>1</queue_mail>
+        <hash>978cdd2b8c754afd9a22dc7627230cc26934dcf9</hash>
+        <url>https://www.rkw-kompetenzzentrum.de/gruendung/buch/gruenderoekosysteme-gestalten/</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>2</uid>
+        <pid>1</pid>
+        <queue_mail>2</queue_mail>
+        <hash>1ac96bb889246612870761843cdab8a6bc33560c</hash>
+        <url>https://www.rkw-kompetenzzentrum.de/gruendung/buch/gruenderoekosysteme-gestalten/#testen</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>3</uid>
+        <pid>1</pid>
+        <queue_mail>4</queue_mail>
+        <hash>48723b1aa49952c291e71078d6690caabd1370ae</hash>
+        <url>http://aprodi-projekt.de</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>4</uid>
+        <pid>1</pid>
+        <queue_mail>4</queue_mail>
+        <hash>cc217a5c99c6bade038ca01bbeb21aa62c65477f</hash>
+        <url>http://aprodi-projekt.de/test</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>5</uid>
+        <pid>1</pid>
+        <queue_mail>4</queue_mail>
+        <hash>cc217a5c99c6bade038ca01bbeb21aa62c65477g</hash>
+        <url>http://www.google.de</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>6</uid>
+        <pid>1</pid>
+        <queue_mail>5</queue_mail>
+        <hash>cc217a5c99c6bade038ca01bbeb21aa62c65477h</hash>
+        <url>http://www.google.de</url>
+    </tx_rkwmailer_domain_model_link>
+
+    <tx_rkwmailer_domain_model_link>
+        <uid>7</uid>
+        <pid>1</pid>
+        <queue_mail>6</queue_mail>
+        <hash>cc217a5c99c6bade038ca01bbeb21aa62c65477i</hash>
+        <url>http://www.google.de</url>
+    </tx_rkwmailer_domain_model_link>
+
+</dataset>

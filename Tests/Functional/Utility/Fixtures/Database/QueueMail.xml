@@ -60,5 +60,35 @@
         <category />
     </tx_rkwmailer_domain_model_queuemail>
 
+    <!-- with type 1 for newsletter testing -->
+    <tx_rkwmailer_domain_model_queuemail>
+        <uid>3</uid>
+        <pid>1</pid>
+        <from_name>Test Drei</from_name>
+        <from_address>test@testen.de</from_address>
+        <reply_address>reply@testen.de</reply_address>
+        <return_path>return@testen.de</return_path>
+        <subject>Test</subject>
+        <body_text>Fallback Body Text</body_text>
+        <attachment />
+        <campaign_parameter />
+        <plaintext_template>Email/Test</plaintext_template>
+        <html_template>Email/Test</html_template>
+        <calendar_template>Email/Test</calendar_template>
+        <priority>0</priority>
+        <sorting>0</sorting>
+        <status>1</status>
+        <type>1</type>
+        <attachment />
+        <attachment_type />
+        <attachment_name />
+        <layout_paths />
+        <partial_paths />
+        <template_paths />
+        <pipeline>0</pipeline>
+        <settings_pid>0</settings_pid>
+        <category />
+    </tx_rkwmailer_domain_model_queuemail>
+
 
 </dataset>
