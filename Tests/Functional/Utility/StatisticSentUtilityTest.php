@@ -301,6 +301,35 @@ class StatisticSentUtilityTest extends FunctionalTestCase
 
 
     /**
+     * @test
+     */
+    public function elevateStatistic_GivenQueueMailAndQueueRecipientAndTestAllAvailableActions_ReturnsTrue()
+    {
+        /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
+        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+
+        /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
+        $queueRecipient = $this->queueRecipientRepository->findByIdentifier(1);
+
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'sent');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'successful');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'failed');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'deferred');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'bounced');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'opened');
+        static::assertTrue($result);
+        $result = $this->subject->elevateStatistic($queueMail, $queueRecipient, 'clicked');
+        static::assertTrue($result);
+    }
+
+
+
+    /**
      * TearDown
      */
     protected function tearDown()

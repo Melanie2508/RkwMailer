@@ -189,7 +189,7 @@ class StatisticSentUtility
             $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, sprintf('An error occurred while trying to access and process RKW Newsletter topic data for QueueMail with UID %s: %s', $queueMail->getUid(), $e));
         }
 
-        return 3;
+        return true;
         //===
     }
 
