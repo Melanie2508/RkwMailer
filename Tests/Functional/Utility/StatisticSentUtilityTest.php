@@ -157,7 +157,7 @@ class StatisticSentUtilityTest extends FunctionalTestCase
     {
         // not a newsletter!
         /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
-        $queueMail = $this->queueMailRepository->findByIdentifier(1);
+        $queueMail = $this->queueMailRepository->findByIdentifier(4);
 
         /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
         $queueRecipient = $this->queueRecipientRepository->findByIdentifier(1);
@@ -305,8 +305,9 @@ class StatisticSentUtilityTest extends FunctionalTestCase
      */
     public function elevateStatistic_GivenQueueMailAndQueueRecipientAndTestAllAvailableActions_ReturnsTrue()
     {
+        // not a newsletter
         /** @var \RKW\RkwMailer\Domain\Model\QueueMail $queueMail */
-        $queueMail = $this->queueMailRepository->findByIdentifier(3);
+        $queueMail = $this->queueMailRepository->findByIdentifier(4);
 
         /** @var \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient */
         $queueRecipient = $this->queueRecipientRepository->findByIdentifier(1);

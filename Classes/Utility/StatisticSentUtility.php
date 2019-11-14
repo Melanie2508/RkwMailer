@@ -96,7 +96,7 @@ class StatisticSentUtility
             //===
         }
 
-        // 1. Always count "total" on any action
+        // 1. Basic statistic: Always count "total" on any action
         $result = $this->increaseAndPersistStatistic($queueMail, 'total');
 
         // escape, if something went wrong
@@ -105,7 +105,7 @@ class StatisticSentUtility
             //===
         }
 
-        // 2. manage basic statistic for queueMail
+        // 2. Basic statistic: Count value for given action
         $result = $this->increaseAndPersistStatistic($queueMail, $action);
 
         // escape, if something went wrong
@@ -189,7 +189,7 @@ class StatisticSentUtility
             $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, sprintf('An error occurred while trying to access and process RKW Newsletter topic data for QueueMail with UID %s: %s', $queueMail->getUid(), $e));
         }
 
-        return true;
+        return false;
         //===
     }
 
