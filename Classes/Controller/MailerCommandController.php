@@ -77,6 +77,13 @@ class MailerCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandC
      */
     protected $frontendUserRepository;
 
+    /**
+     * StatisticSentUtility
+     *
+     * @var \RKW\RkwMailer\Utility\StatisticSentUtility
+     * @inject
+     */
+    protected $statisticSentUtility;
 
     /**
      * configurationManager
@@ -383,11 +390,18 @@ class MailerCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandC
                         if ($frontendUser = $queueRecipient->getFrontendUser() instanceof \RKW\RkwMailer\Domain\Model\FrontendUser) {
                             if ($bounceMail->getType() == 'hard') {
                                 $frontendUser->setTxRkwmailerHardBounceCount($frontendUser->getTxRkwmailerHardBounceCount() + 1);
-                            } else if ($bounceMail->getType() == 'soft') {
-                                $frontendUser->setTxRkwmailerSoftBounceCount($frontendUser->getTxRkwmailerSoftBounceCount() + 1);
+                            } else {
+                                if ($bounceMail->getType() == 'soft') {
+                                    $frontendUser->setTxRkwmailerSoftBounceCount($frontendUser->getTxRkwmailerSoftBounceCount() + 1);
+                                }
                             }
                             $frontendUser->setTxRkwmailerLastBounce(time());
                             $this->frontendUserRepository->update($frontendUser);
+                        }
+
+                        if ($queueRecipient->getQueueMail() instanceof \RKW\RkwMailer\Domain\Model\QueueMail) {
+                            // StatisticSent: ALTERNATIVE EVALUATION
+                            $this->statisticSentUtility->elevateStatistic($queueRecipient->getQueueMail(), $queueRecipient, 'bounced');
                         }
                     }
 

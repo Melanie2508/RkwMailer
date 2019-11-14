@@ -59,7 +59,6 @@ class LinkController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $statisticOpeningRepository;
 
-
     /**
      * StatisticsUtility
      *
@@ -67,6 +66,14 @@ class LinkController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      * @inject
      */
     protected $statisticsUtility;
+
+    /**
+     * StatisticSentUtility
+     *
+     * @var \RKW\RkwMailer\Utility\StatisticSentUtility
+     * @inject
+     */
+    protected $statisticSentUtility;
 
     /**
      * Persistence Manager
@@ -178,12 +185,19 @@ class LinkController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
                 $this->statisticOpeningRepository->add($statisticOpening);
                 $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('Adding new statisticOpening for opening (queueMail uid=%s, queueRecipient uid=%s).', $queueMail->getUid(), $queueRecipient->getUid()));
 
+                // Hint: "Pixel" meant "opened"
+                // StatisticSent: ALTERNATIVE EVALUATION
+                $this->statisticSentUtility->elevateStatistic($queueMail, $queueRecipient, 'opened');
 
             } else {
                 $statisticOpening->setClickCount($statisticOpening->getClickCount() + 1);
                 $this->statisticOpeningRepository->update($statisticOpening);
                 $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('Updating statisticOpening uid=%s for opening (queueMail uid=%s, queueRecipient uid=%s).', $statisticOpening->getUid(), $queueMail->getUid(), $queueRecipient->getUid()));
             }
+
+            // Count click in both cases
+            // StatisticSent: ALTERNATIVE EVALUATION
+            $this->statisticSentUtility->elevateStatistic($queueMail, $queueRecipient, 'click');
 
             $this->persistenceManager->persistAll();
         }

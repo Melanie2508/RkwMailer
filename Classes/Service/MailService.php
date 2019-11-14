@@ -146,6 +146,15 @@ class MailService
 
 
     /**
+     * StatisticSentUtility
+     *
+     * @var \RKW\RkwMailer\Utility\StatisticSentUtility
+     * @inject
+     */
+    protected $statisticSentUtility;
+
+
+    /**
      * QueueMailValidator
      *
      * @var \RKW\RkwMailer\Validation\QueueMailValidator
@@ -917,6 +926,9 @@ class MailService
                 // set recipient status 4 for "sent" and remove marker
                 $queueRecipient->setStatus(4);
 
+                // StatisticSent: ALTERNATIVE EVALUATION
+                $this->statisticSentUtility->elevateStatistic($queueMail, $queueRecipient, 'sent');
+
                 $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('Successfully sent e-mail to "%s" (recipient-uid=%s) for queueMail id=%s.', $queueRecipient->getEmail(), $queueRecipient->getUid(), $queueMail->getUid()));
 
 
@@ -928,6 +940,9 @@ class MailService
                 // set recipient status to error
                 $queueRecipient->setStatus(99);
 
+                // StatisticSent: ALTERNATIVE EVALUATION
+                $this->statisticSentUtility->elevateStatistic($queueMail, $queueRecipient, 'failed');
+
                 $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::WARNING, sprintf('An error occurred while trying to send an e-mail to "%s" (recipient-uid=%s). Message: %s', $queueRecipient->getEmail(), $queueRecipient->getUid(), $errorMessage));
             }
 
@@ -936,6 +951,9 @@ class MailService
             // set status to deferred - we don't sent an email to this address again
             $queueRecipient->setStatus(97);
             $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::WARNING, sprintf('E-mail "%s" (recipient-uid=%s) blocked for further mailings because of bounces detected during processing of queueMail width uid=%s.', $queueRecipient->getEmail(), $queueRecipient->getUid(), $queueMail->getUid()));
+
+            // StatisticSent: ALTERNATIVE EVALUATION
+            $this->statisticSentUtility->elevateStatistic($queueMail, $queueRecipient, 'deferred');
 
         }
 

@@ -41,7 +41,7 @@ class StatisticSentUtility
      *
      * @const array
      */
-    const AVAILABLE_STATISTIC_ACTIONS = ['total', 'sent', 'successful', 'failed', 'deferred', 'bounced', 'opened', 'clicked'];
+    const AVAILABLE_STATISTIC_ACTIONS = ['sent', 'successful', 'failed', 'deferred', 'bounced', 'opened', 'clicked'];
 
     /**
      * objectManager
@@ -73,16 +73,6 @@ class StatisticSentUtility
      */
     protected $logger;
 
-    /**
-     * On initialization, instantiate some things
-     */
-    public function initializeObject() {
-        // we can work with inject here
-        //$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        //$this->statisticSentRepository = $this->objectManager->get('RKW\\RkwMailer\\Domain\\Repository\\StatisticSentRepository');
-        //$this->persistenceManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
-    }
-
 
 
     /**
@@ -92,11 +82,13 @@ class StatisticSentUtility
      * take a look to your local log files, to get more information on crashing
      *
      * @param \RKW\RkwMailer\Domain\Model\QueueMail $queueMail
+     * @param \RKW\RkwMailer\Domain\Model\QueueRecipient $queueRecipient
      * @param string $action The field you want to count.
-     * @param \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $entityRelation Use this to handle sub-statistics
+     * @param \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $entityRelation Use this to handle generic sub-statistics. Not needed for RkwNewsletter
+     * @param string $foreignField is 'uid' by default. Use typical database field spelling like "my_field". Only needed for generic sub statistics
      * @return bool
      */
-    public function elevateStatistic(QueueMail $queueMail, $action, AbstractEntity $entityRelation = null)
+    public function elevateStatistic(QueueMail $queueMail, QueueRecipient $queueRecipient, $action, AbstractEntity $entityRelation = null, $foreignField = 'uid')
     {
         if (!in_array($action, self::AVAILABLE_STATISTIC_ACTIONS)) {
             $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, sprintf('The given action name does not match (given string=%s).', $action));
@@ -104,8 +96,34 @@ class StatisticSentUtility
             //===
         }
 
-        return $this->increaseAndPersistStatistic($queueMail, $action, $entityRelation);
-        //===
+        // 1. Always count "total" on any action
+        $result = $this->increaseAndPersistStatistic($queueMail, 'total');
+
+        // escape, if something went wrong
+        if (!$result) {
+            return $result;
+            //===
+        }
+
+        // 2. manage basic statistic for queueMail
+        $result = $this->increaseAndPersistStatistic($queueMail, $action);
+
+        // escape, if something went wrong
+        if (!$result) {
+            return $result;
+            //===
+        }
+
+        // 3. if relation is given, manage sub-statistic
+        // detect the special case "Newsletter"
+        if (intval($queueMail->getType()) === self::NEWSLETTER_TYPE) {
+            // 2.1 if: is newsletter: Use specific function
+            $result = $this->elevateStatisticOfTxRkwNewsletterTopic($queueMail, $queueRecipient, $action);
+        } else if ($entityRelation instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) {
+            // 2.2 else: manage generic sub statistic of any kind
+            $this->increaseAndPersistStatistic($queueMail, $action, $entityRelation, $foreignField);
+        }
+        return $result ? $result : false;
     }
 
 
@@ -114,6 +132,7 @@ class StatisticSentUtility
      * elevateNewsletterTopicStatistic
      * Specific service function to handle RkwNewsletter data by QueueRecipient without breaking dependency
      * For minor relation management you can use the function "elevateStatistic" instead with optional $entityRelation
+     * -> you would have to put every Subscription (RkwNewsletter->Topic) one after another to the function
      *
      * -> returns false, if the RkwNewsletter extension is not active
      * -> returns false, if the queueMail is not a newsletter (queueMail.type = 1)
@@ -126,7 +145,7 @@ class StatisticSentUtility
      * @param string $action The field you want to count.
      * @return bool
      */
-    public function elevateStatisticOfTxRkwNewsletterTopic(QueueMail $queueMail, QueueRecipient $queueRecipient, $action)
+    protected function elevateStatisticOfTxRkwNewsletterTopic(QueueMail $queueMail, QueueRecipient $queueRecipient, $action)
     {
         // important: Check some essential things
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('rkw_newsletter')) {
@@ -153,23 +172,24 @@ class StatisticSentUtility
             /** @var \RKW\RkwNewsletter\Domain\Model\FrontendUser $rkwNewsletterFrontendUser */
             $rkwNewsletterFrontendUser = $rkwNewsletterFrontendUserRepository->findByIdentifier($queueRecipient->getFrontendUser());
 
-            if ($rkwNewsletterFrontendUser->getTxRkwnewsletterSubscription()->count()) {
-                /** @var \RKW\RkwNewsletter\Domain\Model\Topic $rkwNewsletterTopic */
-                foreach ($rkwNewsletterFrontendUser->getTxRkwnewsletterSubscription() as $rkwNewsletterTopic) {
-                    $this->increaseAndPersistStatistic($queueMail, $action, $rkwNewsletterTopic);
+            if ($rkwNewsletterFrontendUser instanceof \RKW\RkwNewsletter\Domain\Model\FrontendUser) {
+                if ($rkwNewsletterFrontendUser->getTxRkwnewsletterSubscription()->count()) {
+                    /** @var \RKW\RkwNewsletter\Domain\Model\Topic $rkwNewsletterTopic */
+                    foreach ($rkwNewsletterFrontendUser->getTxRkwnewsletterSubscription() as $rkwNewsletterTopic) {
+                        $this->increaseAndPersistStatistic($queueMail, $action, $rkwNewsletterTopic);
+                    }
+                    return true;
+                    //===
+                } else {
+                    $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::WARNING, sprintf('The queueMail with UID %s is of type newsletter. But the recipient (frontendUser with ID %s) does not have any subscriptions (RkwNewsletter->Topic)', $queueMail->getUid(), $rkwNewsletterFrontendUser));
                 }
-
-                return true;
-                //===
-            } else {
-                $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::WARNING, sprintf('The queueMail with UID %s is of type newsletter. But the recipient (frontendUser with ID %s) does not have any subscriptions (RkwNewsletter->Topic)', $queueMail->getUid(), $rkwNewsletterFrontendUser));
             }
 
         } catch (\Exception $e) {
             $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, sprintf('An error occurred while trying to access and process RKW Newsletter topic data for QueueMail with UID %s: %s', $queueMail->getUid(), $e));
         }
 
-        return false;
+        return 3;
         //===
     }
 
@@ -191,10 +211,6 @@ class StatisticSentUtility
     {
         /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper $dataMapper */
         $dataMapper = $this->objectManager->get(\TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper::class);
-
-        // @toDo: check if given foreign field exists in given table
-        //$result = $dataMapper->getDataMap(get_class($entityRelation))->getColumnMap($foreignField);
-        //var_dump($result);
 
         try {
             // a) Either: find statistic by queueMail and relation (e.g. topic)
